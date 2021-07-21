@@ -1,5 +1,7 @@
 package com.lmmartins.vrum.controllers;
 
+import com.lmmartins.vrum.dto.MotoristaDTO;
+import com.lmmartins.vrum.exceptions.ValidacaoException;
 import com.lmmartins.vrum.models.Motorista;
 import com.lmmartins.vrum.enums.MotoristaStatus;
 import com.lmmartins.vrum.services.MotoristaService;
@@ -33,14 +35,28 @@ public class MotoristaController {
     }
 
     @PostMapping
-    public ResponseEntity criarMotorista(@RequestBody Motorista motorista) {
-        return created(null).body(service.criarMotorista(motorista));
+    public ResponseEntity criarMotorista(@RequestBody MotoristaDTO motorista) {
+        try {
+            return created(null).body(service.criarMotorista(motorista));
+        } catch (ValidacaoException e) {
+            return badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return internalServerError().build();
+        }
     }
 
     @PutMapping("/{motoristaId}")
     public ResponseEntity atualizarMotorista(@PathVariable("motoristaId") Long motoristaId,
-                                             @RequestBody Motorista motorista) {
-        return created(null).body(service.atualizarMotorista(motoristaId, motorista));
+                                             @RequestBody MotoristaDTO motorista) {
+        try {
+            return ok().body(service.atualizarMotorista(motoristaId, motorista));
+        } catch (ValidacaoException e) {
+            return badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return internalServerError().build();
+        }
     }
 
     @PutMapping("/{motoristaId}/ativar")

@@ -1,6 +1,7 @@
 package com.lmmartins.vrum.controllers;
 
 import com.lmmartins.vrum.dto.CorridaDTO;
+import com.lmmartins.vrum.exceptions.ValidacaoException;
 import com.lmmartins.vrum.models.Corrida;
 import com.lmmartins.vrum.services.CorridaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,19 +40,32 @@ public class CorridaController {
 
     @PostMapping
     public ResponseEntity criarCorrida(@RequestBody CorridaDTO corrida) {
-        return created(null).body(service.criarCorrida(corrida));
+        try {
+            return created(null).body(service.criarCorrida(corrida));
+        } catch (ValidacaoException e) {
+            return badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return internalServerError().build();
+        }
     }
 
     @PutMapping("/{corridaId}")
     public ResponseEntity atualizarCorridaPorId(@PathVariable("corridaId") Long corridaId,
                                                  @RequestBody CorridaDTO corrida) {
-        //TODO: Validar o motorista e passageiro.
-        return created(null).body(service.atualizarCorridaPorId(corridaId, corrida));
+        try {
+            return ok(service.criarCorrida(corrida));
+        } catch (ValidacaoException e) {
+            return badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return internalServerError().build();
+        }
     }
 
     @DeleteMapping("/{corridaId}")
     public ResponseEntity deletarCorridaPorId(@PathVariable("corridaId") Long corridaId) {
-        service.deletarCorridaPorId(corridaId);
-        return ok().build();
+        service.deletarCorrida(corridaId);
+        return noContent().build();
     }
 }

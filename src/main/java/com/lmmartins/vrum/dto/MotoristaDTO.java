@@ -16,5 +16,5 @@ public class MotoristaDTO {
     private String cpf;
     private String sexo;
     private String modeloCarro;
-    private MotoristaStatus status;
+    private Boolean status;
 }
