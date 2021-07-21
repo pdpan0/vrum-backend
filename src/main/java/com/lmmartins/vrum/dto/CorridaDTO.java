@@ -2,7 +2,6 @@ package com.lmmartins.vrum.dto;
 
 import lombok.*;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Getter

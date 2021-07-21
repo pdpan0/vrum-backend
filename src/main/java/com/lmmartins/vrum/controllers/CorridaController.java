@@ -26,13 +26,13 @@ public class CorridaController {
 //    }
 
     @GetMapping("/passageiros/{passageiroId}")
-    public ResponseEntity getCorridasByPassageiro(@PathVariable("passageiroId") Long passageiroId) {
+    public ResponseEntity getCorridasPorPassageiro(@PathVariable("passageiroId") Long passageiroId) {
         List<Corrida> corridas = service.getCorridasPorPassageiro(passageiroId);
         return corridas.isEmpty() ? noContent().build() : ok(corridas);
     }
 
     @GetMapping("/motoristas/{motoristaId}")
-    public ResponseEntity getCorridasByMotorista(@PathVariable("motoristaId") Long motoristaId) {
+    public ResponseEntity getCorridasPorMotorista(@PathVariable("motoristaId") Long motoristaId) {
         List<Corrida> corridas = service.getCorridasPorMotorista(motoristaId);
         return corridas.isEmpty() ? noContent().build() : ok(corridas);
     }
@@ -43,15 +43,15 @@ public class CorridaController {
     }
 
     @PutMapping("/{corridaId}")
-    public ResponseEntity atualizarCorridaPeloId(@PathVariable("corridaId") Long corridaId,
+    public ResponseEntity atualizarCorridaPorId(@PathVariable("corridaId") Long corridaId,
                                                  @RequestBody CorridaDTO corrida) {
         //TODO: Validar o motorista e passageiro.
-        return created(null).body(service.atualizarCorridaPeloId(corridaId, corrida));
+        return created(null).body(service.atualizarCorridaPorId(corridaId, corrida));
     }
 
     @DeleteMapping("/{corridaId}")
-    public ResponseEntity deletarCorridaPeloId(@PathVariable("corridaId") Long corridaId) {
-        service.deletarCorridaPeloId(corridaId);
+    public ResponseEntity deletarCorridaPorId(@PathVariable("corridaId") Long corridaId) {
+        service.deletarCorridaPorId(corridaId);
         return ok().build();
     }
 }

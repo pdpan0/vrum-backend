@@ -1,57 +1,61 @@
 package com.lmmartins.vrum.controllers;
 
 import com.lmmartins.vrum.models.Motorista;
-import com.lmmartins.vrum.repositories.MotoristaRepository;
+import com.lmmartins.vrum.enums.MotoristaStatus;
+import com.lmmartins.vrum.services.MotoristaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.http.ResponseEntity.*;
 
 @RestController
 @RequestMapping("/v1/motoristas")
 public class MotoristaController {
+
     @Autowired
-    private MotoristaRepository repository;
+    private MotoristaService service;
 
     @GetMapping
     public ResponseEntity getMotoristas() {
         //TODO: Sort, Paginação, Filtros
-        List<Motorista> motoristas = repository.findAll();
+        List<Motorista> motoristas = service.getMotoristas();
         return motoristas.isEmpty() ? noContent().build() : ok(motoristas);
+    }
+
+    @GetMapping("/{motoristaId}")
+    public ResponseEntity getMotoristasPorId(@PathVariable("motoristaId") Long motoristaId) {
+        Optional<Motorista> motorista = service.getMotoristasPorId(motoristaId);
+        return motorista.isEmpty() ? noContent().build() : ok(motorista);
     }
 
     @PostMapping
     public ResponseEntity criarMotorista(@RequestBody Motorista motorista) {
-        return created(null).body(repository.save(motorista).getId());
+        return created(null).body(service.criarMotorista(motorista));
     }
 
     @PutMapping("/{motoristaId}")
-    public ResponseEntity atualizarMotoristaById(@PathVariable("motoristaId") Long motoristaId,
+    public ResponseEntity atualizarMotorista(@PathVariable("motoristaId") Long motoristaId,
                                              @RequestBody Motorista motorista) {
-        Motorista motoristaAtualizado = new Motorista(
-                motoristaId,
-                motorista.getNome(),
-                motorista.getDataNasc(),
-                motorista.getCpf(),
-                motorista.getSexo(),
-                motorista.getModeloCarro(),
-                motorista.getStatus()
-                );
-
-        return created(null).body(repository.save(motoristaAtualizado).getId());
+        return created(null).body(service.atualizarMotorista(motoristaId, motorista));
     }
 
     @PutMapping("/{motoristaId}/ativar")
-    public ResponseEntity inativarMotoristaById(@PathVariable("motoristaId") Long motoristaId) {
-        return unprocessableEntity().build();
+    public ResponseEntity ativarMotorista(@PathVariable("motoristaId") Long motoristaId) {
+        return ok(service.atualizarStatusDoMotorista(motoristaId, MotoristaStatus.ATIVO));
+    }
+
+    @PutMapping("/{motoristaId}/inativar")
+    public ResponseEntity inativarMotorista(@PathVariable("motoristaId") Long motoristaId) {
+        return ok(service.atualizarStatusDoMotorista(motoristaId, MotoristaStatus.INATIVO));
     }
 
     @DeleteMapping("/{motoristaId}")
-    public ResponseEntity deletarMotoristaById(@PathVariable("motoristaId") Long motoristaId) {
-        repository.deleteById(motoristaId);
-        return ok().build();
+    public ResponseEntity deletarMotoristaPorId(@PathVariable("motoristaId") Long motoristaId) {
+        service.deletarMotoristaPorId(motoristaId);
+        return noContent().build();
     }
 }

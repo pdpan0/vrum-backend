@@ -16,16 +16,14 @@ public class Corrida {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //TODO: Não pode ser nulo.
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "motorista_id")
     private Motorista motorista;
 
-    //TODO: Não pode ser nulo.
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "passageiro_id")
     private Passageiro passageiro;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private BigDecimal precoTotal;
 }
