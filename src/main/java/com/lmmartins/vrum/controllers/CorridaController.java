@@ -1,7 +1,8 @@
 package com.lmmartins.vrum.controllers;
 
+import com.lmmartins.vrum.dto.CorridaDTO;
 import com.lmmartins.vrum.models.Corrida;
-import com.lmmartins.vrum.repositories.CorridaRepository;
+import com.lmmartins.vrum.services.CorridaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,39 +14,44 @@ import static org.springframework.http.ResponseEntity.*;
 @RestController
 @RequestMapping("/v1/corridas")
 public class CorridaController {
-    @Autowired
-    private CorridaRepository repository;
 
-    @GetMapping
-    public ResponseEntity getCorridas() {
-        List<Corrida> corridas = repository.findAll();
+    @Autowired
+    private CorridaService service;
+
+//    @GetMapping
+//    public ResponseEntity getCorridasByParams(@RequestParam(value = "passageiroId",required = false) Long passageiroId,
+//                                              @RequestParam(value = "motoristaId",required = false) Long motoristaId) {
+//        List<Corrida> corridas = service.getCorridasPorPassageiroEMotorista(passageiroId, motoristaId);
+//        return corridas.isEmpty() ? noContent().build() : ok(corridas);
+//    }
+
+    @GetMapping("/passageiros/{passageiroId}")
+    public ResponseEntity getCorridasByPassageiro(@PathVariable("passageiroId") Long passageiroId) {
+        List<Corrida> corridas = service.getCorridasPorPassageiro(passageiroId);
+        return corridas.isEmpty() ? noContent().build() : ok(corridas);
+    }
+
+    @GetMapping("/motoristas/{motoristaId}")
+    public ResponseEntity getCorridasByMotorista(@PathVariable("motoristaId") Long motoristaId) {
+        List<Corrida> corridas = service.getCorridasPorMotorista(motoristaId);
         return corridas.isEmpty() ? noContent().build() : ok(corridas);
     }
 
     @PostMapping
-    public ResponseEntity criarCorrida(@RequestBody Corrida corrida) {
-        return created(null).body(repository.save(corrida).getId());
+    public ResponseEntity criarCorrida(@RequestBody CorridaDTO corrida) {
+        return created(null).body(service.criarCorrida(corrida));
     }
 
     @PutMapping("/{corridaId}")
-    public ResponseEntity atualizarCorridaById(@PathVariable("corridaId") Long corridaId,
-                                                 @RequestBody Corrida corrida) {
-
+    public ResponseEntity atualizarCorridaPeloId(@PathVariable("corridaId") Long corridaId,
+                                                 @RequestBody CorridaDTO corrida) {
         //TODO: Validar o motorista e passageiro.
-
-        Corrida corridaAtualizada = new Corrida(
-                corridaId,
-                corrida.getMotorista(),
-                corrida.getPassageiro(),
-                corrida.getPrecoTotal()
-        );
-
-        return created(null).body(repository.save(corridaAtualizada).getId());
+        return created(null).body(service.atualizarCorridaPeloId(corridaId, corrida));
     }
 
     @DeleteMapping("/{corridaId}")
-    public ResponseEntity deletarCorridaById(@PathVariable("corridaId") Long corridaId) {
-        repository.deleteById(corridaId);
+    public ResponseEntity deletarCorridaPeloId(@PathVariable("corridaId") Long corridaId) {
+        service.deletarCorridaPeloId(corridaId);
         return ok().build();
     }
 }

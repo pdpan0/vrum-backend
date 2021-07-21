@@ -14,8 +14,12 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @MappedSuperclass
 public abstract class Pessoa {
+    @Column(nullable = false)
     private String nome;
+    @Column(nullable = false)
     private LocalDate dataNasc;
+    @Column(nullable = false)
     private String cpf;
+    @Column(nullable = false)
     private String sexo;
 }

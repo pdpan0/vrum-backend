@@ -1,2 +1,17 @@
-package com.lmmartins.vrum.dto;public class CorridaDTO {
+package com.lmmartins.vrum.dto;
+
+import lombok.*;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
+public class CorridaDTO {
+    private Long motoristaId;
+    private Long passageiroId;
+    private BigDecimal precoTotal;
 }
