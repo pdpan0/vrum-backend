@@ -13,7 +13,6 @@ import java.util.Optional;
 
 import static org.springframework.http.ResponseEntity.*;
 
-//@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/v1/passageiros")
 public class PassageiroController {
