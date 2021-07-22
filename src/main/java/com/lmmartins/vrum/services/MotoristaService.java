@@ -1,5 +1,6 @@
 package com.lmmartins.vrum.services;
 
+import com.lmmartins.vrum.dto.CountDTO;
 import com.lmmartins.vrum.dto.MotoristaDTO;
 import com.lmmartins.vrum.enums.MotoristaStatus;
 import com.lmmartins.vrum.exceptions.ValidacaoException;
@@ -29,6 +30,10 @@ public class MotoristaService {
 
     public Optional<Motorista> getMotoristasPorId(Long motoristaId) {
         return repository.findById(motoristaId);
+    }
+
+    public CountDTO getTotalMotoristas() {
+        return new CountDTO("Motoristas", repository.count());
     }
 
     //Metódos de Criação

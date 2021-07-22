@@ -1,6 +1,5 @@
 package com.lmmartins.vrum.dto;
 
-import com.lmmartins.vrum.enums.MotoristaStatus;
 import lombok.*;
 
 import java.time.LocalDate;

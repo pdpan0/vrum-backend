@@ -34,6 +34,11 @@ public class MotoristaController {
         return motorista.isEmpty() ? noContent().build() : ok(motorista);
     }
 
+    @GetMapping("/count")
+    public ResponseEntity getMotoristaCount() {
+        return ok(service.getTotalMotoristas());
+    }
+
     @PostMapping
     public ResponseEntity criarMotorista(@RequestBody MotoristaDTO motorista) {
         try {

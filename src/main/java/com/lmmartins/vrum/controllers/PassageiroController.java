@@ -3,7 +3,6 @@ package com.lmmartins.vrum.controllers;
 import com.lmmartins.vrum.dto.PassageiroDTO;
 import com.lmmartins.vrum.exceptions.ValidacaoException;
 import com.lmmartins.vrum.models.Passageiro;
-import com.lmmartins.vrum.repositories.PassageiroRepository;
 import com.lmmartins.vrum.services.PassageiroService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +29,11 @@ public class PassageiroController {
     public ResponseEntity getPassageirosPorId(@PathVariable("passageiroId") Long passageiroId) {
         Optional<Passageiro> passageiros = service.getPassageiroPorId(passageiroId);
         return passageiros.isEmpty() ? noContent().build() : ok(passageiros);
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity getPassageirosCount() {
+        return ok(service.getTotalPassageiros());
     }
 
     @PostMapping

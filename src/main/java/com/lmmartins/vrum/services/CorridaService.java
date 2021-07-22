@@ -1,6 +1,7 @@
 package com.lmmartins.vrum.services;
 
 import com.lmmartins.vrum.dto.CorridaDTO;
+import com.lmmartins.vrum.dto.CountDTO;
 import com.lmmartins.vrum.exceptions.ValidacaoException;
 import com.lmmartins.vrum.models.Corrida;
 import com.lmmartins.vrum.models.Motorista;
@@ -28,6 +29,7 @@ public class CorridaService {
     @Autowired
     private ModelMapper mapper;
 
+    //Metódos de Consultas
     //TODO: Avaliar se necessário.
     public List<Corrida> getCorridasPorPassageiroEMotorista(Long passageiroId, Long motoristaId) {
         return repository.findByPassageiroIdOrMotoristaId(passageiroId, motoristaId);
@@ -41,20 +43,32 @@ public class CorridaService {
         return repository.findByMotoristaId(motoristaId);
     }
 
+    public CountDTO getTotalCorridas() {
+        return new CountDTO("Corridas", repository.count());
+    }
+
+    //Metódos de Criação
     public Long criarCorrida(CorridaDTO corridaDto) throws Exception {
         validarCorrida(corridaDto);
         Corrida corrida = mapper.map(corridaDto, Corrida.class);
         return repository.save(corrida).getId();
     }
-
+    //Metódos de Atualização
     public Long atualizarCorrida(Long corridaId, CorridaDTO corridaDto) throws Exception {
-        validarCorrida(corridaDto);
-        Corrida corrida = mapper.map(corridaDto, Corrida.class);
-        corrida.setId(corridaId);
-        return repository.save(corrida).getId();
+        if (repository.existsById(corridaId)) {
+            validarCorrida(corridaDto);
+            Corrida corrida = mapper.map(corridaDto, Corrida.class);
+            corrida.setId(corridaId);
+            return repository.save(corrida).getId();
+        } else {
+            throw new ValidacaoException("Corrida não existe.");
+        }
     }
 
-    public void deletarCorrida(Long corridaId) {
+    public void deletarCorrida(Long corridaId) throws Exception {
+        if (!repository.existsById(corridaId)) {
+            throw new ValidacaoException("Corrida não existe");
+        }
         repository.deleteById(corridaId);
     }
 

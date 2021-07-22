@@ -38,6 +38,11 @@ public class CorridaController {
         return corridas.isEmpty() ? noContent().build() : ok(corridas);
     }
 
+    @GetMapping("/count")
+    public ResponseEntity getCorridasCount() {
+        return ok(service.getTotalCorridas());
+    }
+
     @PostMapping
     public ResponseEntity criarCorrida(@RequestBody CorridaDTO corrida) {
         try {
@@ -65,7 +70,14 @@ public class CorridaController {
 
     @DeleteMapping("/{corridaId}")
     public ResponseEntity deletarCorridaPorId(@PathVariable("corridaId") Long corridaId) {
-        service.deletarCorrida(corridaId);
-        return noContent().build();
+        try {
+            service.deletarCorrida(corridaId);
+            return noContent().build();
+        } catch (ValidacaoException e) {
+            return badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return internalServerError().build();
+        }
     }
 }

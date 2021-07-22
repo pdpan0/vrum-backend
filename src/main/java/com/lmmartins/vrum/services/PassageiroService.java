@@ -1,5 +1,6 @@
 package com.lmmartins.vrum.services;
 
+import com.lmmartins.vrum.dto.CountDTO;
 import com.lmmartins.vrum.dto.PassageiroDTO;
 import com.lmmartins.vrum.exceptions.ValidacaoException;
 import com.lmmartins.vrum.models.Motorista;
@@ -28,6 +29,10 @@ public class PassageiroService {
 
     public Optional<Passageiro> getPassageiroPorId(Long passageiroId) {
         return repository.findById(passageiroId);
+    }
+
+    public CountDTO getTotalPassageiros() {
+        return new CountDTO("Passageiros", repository.count());
     }
 
     //Metódos de Criação
