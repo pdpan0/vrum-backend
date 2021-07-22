@@ -12,6 +12,7 @@ import java.util.List;
 
 import static org.springframework.http.ResponseEntity.*;
 
+//@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/v1/corridas")
 public class CorridaController {
