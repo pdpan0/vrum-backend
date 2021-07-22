@@ -61,17 +61,40 @@ public class MotoristaController {
 
     @PutMapping("/{motoristaId}/ativar")
     public ResponseEntity ativarMotorista(@PathVariable("motoristaId") Long motoristaId) {
-        return ok(service.atualizarStatusDoMotorista(motoristaId, MotoristaStatus.ATIVO));
+        try {
+            service.atualizarStatusDoMotorista(motoristaId, MotoristaStatus.ATIVO);
+            return ok().build();
+        } catch (ValidacaoException e) {
+            return badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return internalServerError().build();
+        }
     }
 
     @PutMapping("/{motoristaId}/inativar")
     public ResponseEntity inativarMotorista(@PathVariable("motoristaId") Long motoristaId) {
-        return ok(service.atualizarStatusDoMotorista(motoristaId, MotoristaStatus.INATIVO));
+        try {
+            service.atualizarStatusDoMotorista(motoristaId, MotoristaStatus.INATIVO);
+            return ok().build();
+        } catch (ValidacaoException e) {
+            return badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return internalServerError().build();
+        }
     }
 
     @DeleteMapping("/{motoristaId}")
     public ResponseEntity deletarMotoristaPorId(@PathVariable("motoristaId") Long motoristaId) {
-        service.deletarMotoristaPorId(motoristaId);
-        return noContent().build();
+        try {
+            service.deletarMotoristaPorId(motoristaId);
+            return noContent().build();
+        } catch (ValidacaoException e) {
+            return badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return internalServerError().build();
+        }
     }
 }

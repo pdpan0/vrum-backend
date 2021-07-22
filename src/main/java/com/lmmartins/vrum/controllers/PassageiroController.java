@@ -1,5 +1,7 @@
 package com.lmmartins.vrum.controllers;
 
+import com.lmmartins.vrum.dto.PassageiroDTO;
+import com.lmmartins.vrum.exceptions.ValidacaoException;
 import com.lmmartins.vrum.models.Passageiro;
 import com.lmmartins.vrum.repositories.PassageiroRepository;
 import com.lmmartins.vrum.services.PassageiroService;
@@ -31,19 +33,40 @@ public class PassageiroController {
     }
 
     @PostMapping
-    public ResponseEntity criarPassageiro(@RequestBody Passageiro passageiro) {
-        return created(null).body(service.criarPassageiro(passageiro));
+    public ResponseEntity criarPassageiro(@RequestBody PassageiroDTO passageiroDto) {
+        try {
+            return created(null).body(service.criarPassageiro(passageiroDto));
+        } catch (ValidacaoException e) {
+            return badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return internalServerError().build();
+        }
     }
 
     @PutMapping("/{passageiroId}")
     public ResponseEntity atualizarPassageiro(@PathVariable("passageiroId") Long passageiroId,
-                                             @RequestBody Passageiro passageiro) {
-        return ok(service.atualizarPassageiro(passageiroId,passageiro));
+                                             @RequestBody PassageiroDTO passageiroDto) {
+        try {
+            return ok().body(service.atualizarPassageiro(passageiroId, passageiroDto));
+        } catch (ValidacaoException e) {
+            return badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return internalServerError().build();
+        }
     }
 
     @DeleteMapping("/{passageiroId}")
     public ResponseEntity deletarPassageiro(@PathVariable("passageiroId") Long passageiroId) {
-        service.deletarPassageiroPorId(passageiroId);
-        return noContent().build();
+        try {
+            service.deletarPassageiroPorId(passageiroId);
+            return noContent().build();
+        } catch (ValidacaoException e) {
+            return badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return internalServerError().build();
+        }
     }
 }

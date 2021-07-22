@@ -1,7 +1,6 @@
 package com.lmmartins.vrum.services;
 
 import com.lmmartins.vrum.dto.CorridaDTO;
-import com.lmmartins.vrum.dto.ValidacaoDTO;
 import com.lmmartins.vrum.exceptions.ValidacaoException;
 import com.lmmartins.vrum.models.Corrida;
 import com.lmmartins.vrum.models.Motorista;
@@ -59,6 +58,7 @@ public class CorridaService {
         repository.deleteById(corridaId);
     }
 
+    //Validações
     private void validarCorrida(CorridaDTO corrida) throws Exception {
         Optional<Motorista> motorista =
                 motoristaService.getMotoristasPorId(corrida.getMotoristaId());

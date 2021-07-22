@@ -16,5 +16,5 @@ public interface MotoristaRepository extends JpaRepository<Motorista, Long> {
     Integer setMotoristaStatus(@Param("motoristaId") Long motoristaId,
                                @Param("status") Boolean status);
 
-    Optional<Motorista> getMotoristaByCpf(String cpf);
+    Boolean existsByCpf(String cpf);
 }

@@ -54,7 +54,7 @@ public class CorridaController {
     public ResponseEntity atualizarCorridaPorId(@PathVariable("corridaId") Long corridaId,
                                                  @RequestBody CorridaDTO corrida) {
         try {
-            return ok(service.criarCorrida(corrida));
+            return ok(service.atualizarCorrida(corridaId, corrida));
         } catch (ValidacaoException e) {
             return badRequest().body(e.getMessage());
         } catch (Exception e) {
