@@ -19,6 +19,9 @@ public class PassageiroService {
     private PassageiroRepository repository;
 
     @Autowired
+    private CorridaService corridaService;
+
+    @Autowired
     private ModelMapper mapper;
 
     //Metódos de Consultas
@@ -64,6 +67,7 @@ public class PassageiroService {
         if (!repository.existsById(passageiroId)) {
             throw new ValidacaoException("Passageiro não existe");
         }
+        corridaService.deletarCorridaPorPassageiro(passageiroId);
         repository.deleteById(passageiroId);
     }
 

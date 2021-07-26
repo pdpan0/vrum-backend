@@ -11,8 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.modelmapper.ModelMapper;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 
@@ -70,6 +72,14 @@ public class CorridaService {
             throw new ValidacaoException("Corrida não existe");
         }
         repository.deleteById(corridaId);
+    }
+
+    public void deletarCorridaPorMotorista(Long motoristaId) throws Exception {
+            repository.deleteCorridaByMotoristaId(motoristaId);
+    }
+
+    public void deletarCorridaPorPassageiro(Long passageiroId) throws Exception {
+        repository.deleteCorridaByPassageiroId(passageiroId);
     }
 
     //Validações

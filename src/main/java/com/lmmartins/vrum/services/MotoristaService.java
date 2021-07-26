@@ -18,6 +18,8 @@ public class MotoristaService {
 
     @Autowired
     private MotoristaRepository repository;
+    @Autowired
+    private CorridaService corridaService;
 
     @Autowired
     private ModelMapper mapper;
@@ -76,6 +78,7 @@ public class MotoristaService {
         if (!repository.existsById(motoristaId)) {
             throw new ValidacaoException("Motorista não existe");
         }
+        corridaService.deletarCorridaPorMotorista(motoristaId);
         repository.deleteById(motoristaId);
     }
 
