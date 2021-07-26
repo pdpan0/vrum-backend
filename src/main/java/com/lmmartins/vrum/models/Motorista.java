@@ -22,8 +22,6 @@ public class Motorista extends Pessoa {
     private String modeloCarro;
     @Column(nullable = false)
     private Boolean status;
-    @OneToMany(mappedBy = "motorista", orphanRemoval = true, cascade = CascadeType.PERSIST)
-    private List<Corrida> corridas;
 
     public Motorista(Long id,
                      String nome,

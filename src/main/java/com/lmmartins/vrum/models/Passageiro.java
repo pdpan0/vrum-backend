@@ -19,8 +19,6 @@ public class Passageiro extends Pessoa {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @OneToMany(mappedBy = "passageiro", orphanRemoval = true, cascade = CascadeType.PERSIST)
-    private List<Corrida> corridas;
 
     public Passageiro(Long id,
                       String nome,
