@@ -36,6 +36,14 @@ public class MotoristaService {
         return new CountDTO("Motoristas", repository.count());
     }
 
+    public Boolean existMotoristaPorCPF(String cpf) {
+        return repository.existsByCpf(cpf);
+    }
+
+    public Boolean existMotorista(Long motoristaId) {
+        return motoristaId != null && repository.existsById(motoristaId);
+    }
+
     //Metódos de Criação
     public Long criarMotorista(MotoristaDTO motoristaDto) throws Exception {
         Motorista motorista = mapper.map(motoristaDto, Motorista.class);
@@ -73,7 +81,7 @@ public class MotoristaService {
 
     //Validações
     private void validarMotorista(Motorista motorista) throws Exception {
-        //TODO: Validar outros campos.
+        validarMotoristaPorCPF(motorista.getCpf());
     }
 
     private void validarMotoristaPorCPF(String cpf) throws Exception {

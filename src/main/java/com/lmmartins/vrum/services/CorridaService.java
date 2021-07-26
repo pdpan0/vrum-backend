@@ -8,6 +8,7 @@ import com.lmmartins.vrum.models.Motorista;
 import com.lmmartins.vrum.models.Passageiro;
 import com.lmmartins.vrum.repositories.CorridaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.modelmapper.ModelMapper;
 
@@ -30,9 +31,8 @@ public class CorridaService {
     private ModelMapper mapper;
 
     //Metódos de Consultas
-    //TODO: Avaliar se necessário.
-    public List<Corrida> getCorridasPorPassageiroEMotorista(Long passageiroId, Long motoristaId) {
-        return repository.findByPassageiroIdOrMotoristaId(passageiroId, motoristaId);
+    public List<Corrida> getCorridasOrdenadas(Sort.Direction direction, String... properties) {
+        return repository.findAll(Sort.by(direction, properties));
     }
 
     public List<Corrida> getCorridasPorPassageiro(Long passageiroId) {
@@ -74,17 +74,11 @@ public class CorridaService {
 
     //Validações
     private void validarCorrida(CorridaDTO corrida) throws Exception {
-        Optional<Motorista> motorista =
-                motoristaService.getMotoristasPorId(corrida.getMotoristaId());
-
-        if(!motorista.isPresent()) {
+        if(!motoristaService.existMotorista(corrida.getMotoristaId())) {
             throw new ValidacaoException("Motorista é obrigatório.");
         }
 
-        Optional<Passageiro> passageiro =
-                passageiroService.getPassageiroPorId(corrida.getPassageiroId());
-
-        if(!passageiro.isPresent()) {
+        if(!passageiroService.existPassageiro(corrida.getPassageiroId())) {
             throw new ValidacaoException("Passageiro é obrigatório.");
         }
 

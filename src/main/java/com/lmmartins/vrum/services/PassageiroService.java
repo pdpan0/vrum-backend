@@ -35,6 +35,10 @@ public class PassageiroService {
         return new CountDTO("Passageiros", repository.count());
     }
 
+    public Boolean existPassageiro(Long passageiroId) {
+        return passageiroId != null && repository.existsById(passageiroId);
+    }
+
     //Metódos de Criação
     public Long criarPassageiro(PassageiroDTO passageiroDto) throws Exception {
         Passageiro passageiro = mapper.map(passageiroDto, Passageiro.class);

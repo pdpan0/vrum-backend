@@ -1,5 +1,6 @@
 package com.lmmartins.vrum.controllers;
 
+import com.lmmartins.vrum.dto.CorpoRespostaDTO;
 import com.lmmartins.vrum.dto.PassageiroDTO;
 import com.lmmartins.vrum.exceptions.ValidacaoException;
 import com.lmmartins.vrum.models.Passageiro;
@@ -41,10 +42,17 @@ public class PassageiroController {
         try {
             return created(null).body(service.criarPassageiro(passageiroDto));
         } catch (ValidacaoException e) {
-            return badRequest().body(e.getMessage());
+            return badRequest().body(
+                    new CorpoRespostaDTO(400,
+                            "BadRequestException",
+                            e.getMessage(),
+                            null));
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return internalServerError().build();
+            return internalServerError().body(new CorpoRespostaDTO(500,
+                    "InternalServerException",
+                    "Não foi possível realizar essa operação.",
+                    null));
         }
     }
 
@@ -54,10 +62,17 @@ public class PassageiroController {
         try {
             return ok().body(service.atualizarPassageiro(passageiroId, passageiroDto));
         } catch (ValidacaoException e) {
-            return badRequest().body(e.getMessage());
+            return badRequest().body(
+                    new CorpoRespostaDTO(400,
+                            "BadRequestException",
+                            e.getMessage(),
+                            passageiroId.toString()));
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return internalServerError().build();
+            return internalServerError().body(new CorpoRespostaDTO(500,
+                    "InternalServerException",
+                    "Não foi possível realizar essa operação.",
+                    null));
         }
     }
 
@@ -67,10 +82,17 @@ public class PassageiroController {
             service.deletarPassageiroPorId(passageiroId);
             return noContent().build();
         } catch (ValidacaoException e) {
-            return badRequest().body(e.getMessage());
+            return badRequest().body(
+                    new CorpoRespostaDTO(400,
+                            "BadRequestException",
+                            e.getMessage(),
+                            passageiroId.toString()));
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return internalServerError().build();
+            return internalServerError().body(new CorpoRespostaDTO(500,
+                    "InternalServerException",
+                    "Não foi possível realizar essa operação.",
+                    null));
         }
     }
 }

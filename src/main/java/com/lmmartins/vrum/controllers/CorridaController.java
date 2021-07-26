@@ -1,10 +1,12 @@
 package com.lmmartins.vrum.controllers;
 
+import com.lmmartins.vrum.dto.CorpoRespostaDTO;
 import com.lmmartins.vrum.dto.CorridaDTO;
 import com.lmmartins.vrum.exceptions.ValidacaoException;
 import com.lmmartins.vrum.models.Corrida;
 import com.lmmartins.vrum.services.CorridaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,12 +21,11 @@ public class CorridaController {
     @Autowired
     private CorridaService service;
 
-//    @GetMapping
-//    public ResponseEntity getCorridasByParams(@RequestParam(value = "passageiroId",required = false) Long passageiroId,
-//                                              @RequestParam(value = "motoristaId",required = false) Long motoristaId) {
-//        List<Corrida> corridas = service.getCorridasPorPassageiroEMotorista(passageiroId, motoristaId);
-//        return corridas.isEmpty() ? noContent().build() : ok(corridas);
-//    }
+    @GetMapping
+    public ResponseEntity getCorridasRecentes() {
+        List<Corrida> corridas = service.getCorridasOrdenadas(Sort.Direction.DESC, "id");
+        return corridas.isEmpty() ? noContent().build() : ok(corridas);
+    }
 
     @GetMapping("/passageiros/{passageiroId}")
     public ResponseEntity getCorridasPorPassageiro(@PathVariable("passageiroId") Long passageiroId) {
@@ -48,10 +49,17 @@ public class CorridaController {
         try {
             return created(null).body(service.criarCorrida(corrida));
         } catch (ValidacaoException e) {
-            return badRequest().body(e.getMessage());
+            return badRequest().body(
+                    new CorpoRespostaDTO(400,
+                            "BadRequestException",
+                            e.getMessage(),
+                            null));
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return internalServerError().build();
+            return internalServerError().body(new CorpoRespostaDTO(500,
+                    "InternalServerException",
+                    "Não foi possível realizar essa operação.",
+                    null));
         }
     }
 
@@ -61,10 +69,16 @@ public class CorridaController {
         try {
             return ok(service.atualizarCorrida(corridaId, corrida));
         } catch (ValidacaoException e) {
-            return badRequest().body(e.getMessage());
+            return badRequest().body(new CorpoRespostaDTO(400,
+                    "BadRequestException",
+                    e.getMessage(),
+                    corridaId.toString()));
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return internalServerError().build();
+            return internalServerError().body(new CorpoRespostaDTO(500,
+                    "InternalServerException",
+                    "Não foi possível realizar essa operação.",
+                    null));
         }
     }
 
@@ -74,10 +88,16 @@ public class CorridaController {
             service.deletarCorrida(corridaId);
             return noContent().build();
         } catch (ValidacaoException e) {
-            return badRequest().body(e.getMessage());
+            return badRequest().body(new CorpoRespostaDTO(400,
+                    "BadRequestException",
+                    e.getMessage(),
+                    corridaId.toString()));
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return internalServerError().build();
+            return internalServerError().body(new CorpoRespostaDTO(500,
+                    "InternalServerException",
+                    "Não foi possível realizar essa operação.",
+                    null));
         }
     }
 }

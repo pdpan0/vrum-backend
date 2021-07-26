@@ -1,5 +1,7 @@
 package com.lmmartins.vrum.controllers;
 
+import com.lmmartins.vrum.dto.CorpoRespostaDTO;
+import com.lmmartins.vrum.dto.ExisteDTO;
 import com.lmmartins.vrum.dto.MotoristaDTO;
 import com.lmmartins.vrum.exceptions.ValidacaoException;
 import com.lmmartins.vrum.models.Motorista;
@@ -34,6 +36,11 @@ public class MotoristaController {
         return motorista.isEmpty() ? noContent().build() : ok(motorista);
     }
 
+    @GetMapping("/cpf/{cpf}")
+    public ResponseEntity getMotoristasPorCPF(@PathVariable("cpf") String cpf) {
+        return ok(new ExisteDTO(service.existMotoristaPorCPF(cpf)));
+    }
+
     @GetMapping("/count")
     public ResponseEntity getMotoristaCount() {
         return ok(service.getTotalMotoristas());
@@ -44,10 +51,17 @@ public class MotoristaController {
         try {
             return created(null).body(service.criarMotorista(motorista));
         } catch (ValidacaoException e) {
-            return badRequest().body(e.getMessage());
+            return badRequest().body(
+                    new CorpoRespostaDTO(400,
+                            "BadRequestException",
+                            e.getMessage(),
+                            null));
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return internalServerError().build();
+            return internalServerError().body(new CorpoRespostaDTO(500,
+                    "InternalServerException",
+                    "Não foi possível realizar essa operação.",
+                    null));
         }
     }
 
@@ -57,10 +71,17 @@ public class MotoristaController {
         try {
             return ok().body(service.atualizarMotorista(motoristaId, motorista));
         } catch (ValidacaoException e) {
-            return badRequest().body(e.getMessage());
+            return badRequest().body(
+                    new CorpoRespostaDTO(400,
+                            "BadRequestException",
+                            e.getMessage(),
+                            motoristaId.toString()));
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return internalServerError().build();
+            return internalServerError().body(new CorpoRespostaDTO(500,
+                    "InternalServerException",
+                    "Não foi possível realizar essa operação.",
+                    null));
         }
     }
 
@@ -70,10 +91,17 @@ public class MotoristaController {
             service.atualizarStatusDoMotorista(motoristaId, MotoristaStatus.ATIVO);
             return ok().build();
         } catch (ValidacaoException e) {
-            return badRequest().body(e.getMessage());
+            return badRequest().body(
+                    new CorpoRespostaDTO(400,
+                            "BadRequestException",
+                            e.getMessage(),
+                            motoristaId.toString()));
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return internalServerError().build();
+            return internalServerError().body(new CorpoRespostaDTO(500,
+                    "InternalServerException",
+                    "Não foi possível realizar essa operação.",
+                    null));
         }
     }
 
@@ -83,10 +111,17 @@ public class MotoristaController {
             service.atualizarStatusDoMotorista(motoristaId, MotoristaStatus.INATIVO);
             return ok().build();
         } catch (ValidacaoException e) {
-            return badRequest().body(e.getMessage());
+            return badRequest().body(
+                    new CorpoRespostaDTO(400,
+                            "BadRequestException",
+                            e.getMessage(),
+                            motoristaId.toString()));
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return internalServerError().build();
+            return internalServerError().body(new CorpoRespostaDTO(500,
+                    "InternalServerException",
+                    "Não foi possível realizar essa operação.",
+                    null));
         }
     }
 
@@ -96,10 +131,17 @@ public class MotoristaController {
             service.deletarMotoristaPorId(motoristaId);
             return noContent().build();
         } catch (ValidacaoException e) {
-            return badRequest().body(e.getMessage());
+            return badRequest().body(
+                    new CorpoRespostaDTO(400,
+                            "BadRequestException",
+                            e.getMessage(),
+                            motoristaId.toString()));
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return internalServerError().build();
+            return internalServerError().body(new CorpoRespostaDTO(500,
+                    "InternalServerException",
+                    "Não foi possível realizar essa operação.",
+                    null));
         }
     }
 }
